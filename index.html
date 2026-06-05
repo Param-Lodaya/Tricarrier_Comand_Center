@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tricarrier Defensive Operations Portal</title>
+  
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#070b14">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="root">
+  <div id="auth-screen">
+    <div class="auth-card">
+      <div class="auth-icon">🛡️</div>
+      <div class="auth-title">Terminal Auth Required</div>
+      <div class="auth-sub">Enter secure access token</div>
+      <input type="password" id="auth-input" class="auth-input" placeholder="ACCESS_CODE">
+      <button class="auth-btn" onclick="doLogin()">Initialize Console</button>
+      <div class="auth-hint">Demo token: param@2006</div>
+    </div>
+  </div>
+
+  <div id="main">
+    <header>
+      <div class="header-brand">
+        <div class="header-icon">🛡</div>
+        <div>
+          <div class="header-title">Tricarrier Defensive Operations Portal</div>
+          <div class="header-sub">ACTIVE_DEFENSIVE_SESSION</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="stat-pill">Cases: <span id="hdr-count">0</span></div>
+        <button class="btn-sm">DOCUMENTATION</button>
+        <button class="btn-sm" onclick="doLogout()">LOGOUT</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-title">📁 Case Manager</div>
+          <button class="btn-new" id="btn-new" onclick="newCase()">+ NEW</button>
+        </div>
+        <div class="search-wrap">
+          <input class="search-input" id="search-box" placeholder="Search cases..." oninput="renderList()">
+        </div>
+        <div class="case-list" id="case-list"></div>
+      </div>
+
+      <div class="editor">
+        <div class="card">
+          <input class="title-input" id="f-title" placeholder="Case title...">
+          <div class="grid-2">
+            <div>
+              <div class="field-label">MITRE Tactic</div>
+              <input class="field-input" id="f-tactic" placeholder="Credential Access (TA0006)">
+            </div>
+            <div>
+              <div class="field-label">Severity</div>
+              <select class="field-input" id="f-severity">
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top:12px;">
+            <div class="field-label">Status</div>
+            <select class="field-input" id="f-status">
+              <option>Open</option>
+              <option>Investigating</option>
+              <option>Mitigated</option>
+              <option>Resolved</option>
+              <option>False Positive</option>
+            </select>
+          </div>
+          <div style="margin-top:12px;">
+            <div class="field-label">Assigned Analyst</div>
+            <input class="field-input" id="f-analyst" placeholder="Analyst name...">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="field-label">Investigation Summary</div>
+          <textarea class="field-input" rows="5" id="f-summary" placeholder="Write investigation summary..."></textarea>
+        </div>
+
+        <div class="card">
+          <div class="field-label">Network Topology</div>
+          <textarea class="field-input" rows="3" id="f-topology" placeholder="Source --> Target"></textarea>
+        </div>
+
+        <div class="card">
+          <div class="field-label">Investigation Timeline</div>
+          <textarea class="field-input" rows="5" id="f-timeline" placeholder="[12:01] Alert triggered"></textarea>
+        </div>
+
+        <div class="card">
+          <div class="field-label">Investigation Checklist</div>
+          <textarea class="field-input" rows="5" id="f-checklist" placeholder="[✓] Logs collected"></textarea>
+        </div>
+
+        <div class="card">
+          <div class="field-label">Raw Log Buffer</div>
+          <textarea class="field-input" rows="8" id="f-logs" placeholder="Paste logs..."></textarea>
+        </div>
+
+        <div class="card">
+          <div class="field-label">Evidence Attachments</div>
+          <input type="file" class="field-input" id="f-evidence" multiple>
+          <div id="evidence-list" style="margin-top:10px; color:var(--text-secondary); font-size:11px;"></div>
+        </div>
+
+        <button class="commit-btn" id="btn-save" onclick="saveCase()">💾 COMMIT_CHANGES</button>
+      </div>
+
+      <div class="right-panel">
+        <div class="rp-header">📊 OVERVIEW</div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-num" id="s-total">0</div><div class="stat-lbl">Total</div></div>
+          <div class="stat-card"><div class="stat-num" id="s-open">0</div><div class="stat-lbl">Open</div></div>
+          <div class="stat-card"><div class="stat-num" id="s-resolved">0</div><div class="stat-lbl">Resolved</div></div>
+          <div class="stat-card"><div class="stat-num" id="s-high">0</div><div class="stat-lbl">High</div></div>
+        </div>
+
+        <div class="scratchpad">
+          <div class="rp-header">📝 SCRATCHPAD</div>
+          <textarea id="scratchpad" placeholder="Temporary notes..."></textarea>
+        </div>
+
+        <div class="export-section">
+          <button class="export-btn" onclick="exportCase()">⬇ EXPORT ACTIVE CASE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script type="module" src="script.js"></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js');
+    });
+  }
+</script>
+
+</body>
+</html>
